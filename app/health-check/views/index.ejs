@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Check Database Connection</title>
+    <script>
+      async function submitForm(event, type) {
+        event.preventDefault(); // Ngăn form tải lại trang
+
+        // Lấy dữ liệu từ form
+        const formData = new FormData(event.target);
+        const data = {};
+        formData.forEach((value, key) => {
+          data[key] = key === 'port' ? parseInt(value) : value; // Ép kiểu port thành số
+        });
+
+        // Gửi request đến API tương ứng
+        const response = await fetch(`/${type}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        })
+          .then(async (res) => {
+            const result = await res.text();
+            console.log(result);
+            alert(result);
+          })
+          .catch((err) => {
+            alert(err || 'Error occurred');
+          });
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Check Connection</h1>
+
+    <h2>Postgres Connection</h2>
+    <form onsubmit="submitForm(event, 'postgres')">
+      <label>Hostname:</label>
+      <input type="text" name="hostname" required />
+      <br />
+      <label>Port:</label>
+      <input type="number" name="port" value="5432" required />
+      <br />
+      <label>Username:</label>
+      <input type="text" name="username" required />
+      <br />
+      <label>Password:</label>
+      <input type="password" name="password" required />
+      <br />
+      <label>Database:</label>
+      <input type="text" name="database" required />
+      <br />
+      <button type="submit">Check Postgres</button>
+    </form>
+
+    <h2>Redis Connection</h2>
+    <form onsubmit="submitForm(event, 'redis')">
+      <label>Hostname:</label>
+      <input type="text" name="hostname" required />
+      <br />
+      <label>Port:</label>
+      <input type="number" name="port" value="6379" required />
+      <br />
+      <label>Username:</label>
+      <input type="text" name="username" />
+      <br />
+      <label>Password:</label>
+      <input type="password" name="password" required />
+      <br />
+      <button type="submit">Check Redis</button>
+    </form>
+  </body>
+</html>
