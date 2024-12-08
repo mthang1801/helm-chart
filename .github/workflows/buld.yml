@@ -24,7 +24,7 @@ jobs:
       # Step 3: Build the Docker image
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/health-check:${{ github.sha }} .
+          docker build -f ./health-check/Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/health-check:${{ github.sha }} .
           docker tag ${{ secrets.DOCKER_USERNAME }}/health-check:${{ github.sha }} ${{ secrets.DOCKER_USERNAME }}/health-check:latest
 
       # Step 4: Push the Docker image (optional)
