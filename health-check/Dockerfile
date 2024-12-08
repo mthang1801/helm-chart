@@ -3,13 +3,14 @@ FROM node:21-alpine AS base
 WORKDIR /usr/src/app
 COPY package*.json .
 # RUN npm config set registry http://registry.npmjs.org/ 
-RUN npm install --frozen-lockfile
+RUN npm install
 
 FROM node:21-alpine AS build 
 WORKDIR /usr/src/app
 COPY . .
 COPY --from=base /usr/src/app/node_modules ./node_modules
 RUN npm run build 
+RUN npm install --omit=dev
 
 FROM node:21-alpine AS final
 WORKDIR /usr/src/app
